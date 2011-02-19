@@ -181,7 +181,11 @@
 	// Now we translate the loaded region back into screen space for loadedBounds.
 	CGRect newLoadedBounds;
 	newLoadedBounds.origin.x = bounds.origin.x - (rect.origin.offset.x * pixelsPerTile);
-	newLoadedBounds.origin.y = bounds.origin.y - (rect.origin.offset.y * pixelsPerTile);	
+#if TARGET_OS_IPHONE
+	newLoadedBounds.origin.y = bounds.origin.y - (rect.origin.offset.y * pixelsPerTile);
+#else
+    newLoadedBounds.origin.y = bounds.origin.y - ((tileRegionHeight - rect.origin.offset.y - rect.size.height) * pixelsPerTile);
+#endif    
 	newLoadedBounds.size.width = tileRegionWidth * pixelsPerTile;
 	newLoadedBounds.size.height = tileRegionHeight * pixelsPerTile;
 
@@ -209,7 +213,11 @@
 
 				// this regrouping of terms is better for calculation precision (issue 128)		
 				screenLocation.origin.x = bounds.origin.x + (t.x - rect.origin.tile.x - rect.origin.offset.x) * pixelsPerTile;		
+#if TARGET_OS_IPHONE
 				screenLocation.origin.y = bounds.origin.y + (t.y - rect.origin.tile.y - rect.origin.offset.y) * pixelsPerTile;
+#else
+                screenLocation.origin.y = bounds.origin.y + (rect.origin.offset.y + rect.size.height - 1 - t.y + rect.origin.tile.y) * pixelsPerTile;
+#endif
 
 				[self addTile:normalisedTile At:screenLocation];
 			}
