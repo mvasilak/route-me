@@ -11,7 +11,6 @@
 		61324B4E130F41B100C9D243 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4D130F41B100C9D243 /* CoreFoundation.framework */; };
 		61324B50130F41C400C9D243 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4F130F41C400C9D243 /* CoreLocation.framework */; };
 		61324B52130F41D600C9D243 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B51130F41D600C9D243 /* QuartzCore.framework */; };
-		61324B56130F420D00C9D243 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B55130F420D00C9D243 /* ApplicationServices.framework */; };
 		61324B5B130F434A00C9D243 /* NSColor+MapView.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B59130F434A00C9D243 /* NSColor+MapView.h */; };
 		61324B5C130F434A00C9D243 /* NSColor+MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61324B5A130F434A00C9D243 /* NSColor+MapView.m */; };
 		61324BDD130F43DE00C9D243 /* RMGlobalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B5E130F43DE00C9D243 /* RMGlobalConstants.h */; };
@@ -125,14 +124,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 61324B41130F416000C9D243 /* Proj4-osx.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libProj4-osx.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = "Proj4-osx";
 		};
 		61324C46130F463A00C9D243 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 61324B41130F416000C9D243 /* Proj4-osx.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* Proj4-osx */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = "Proj4-osx";
 		};
 /* End PBXContainerItemProxy section */
@@ -147,7 +146,6 @@
 		61324B4D130F41B100C9D243 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		61324B4F130F41C400C9D243 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		61324B51130F41D600C9D243 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		61324B55130F420D00C9D243 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		61324B57130F421900C9D243 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		61324B59130F434A00C9D243 /* NSColor+MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+MapView.h"; sourceTree = "<group>"; };
 		61324B5A130F434A00C9D243 /* NSColor+MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+MapView.m"; sourceTree = "<group>"; };
@@ -273,7 +271,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				61324B4E130F41B100C9D243 /* CoreFoundation.framework in Frameworks */,
-				61324B56130F420D00C9D243 /* ApplicationServices.framework in Frameworks */,
 				61324B50130F41C400C9D243 /* CoreLocation.framework in Frameworks */,
 				61324B52130F41D600C9D243 /* QuartzCore.framework in Frameworks */,
 				D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */,

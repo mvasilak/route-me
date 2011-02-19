@@ -25,7 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <UIKit/UIKit.h>
 #import "RMMapLayer.h"
 #import "RMFoundation.h"
 #ifdef DEBUG
@@ -43,9 +42,9 @@
 	NSObject* data; 
 	
 	/// Text label, visible by default if it has content, but not required.
-	UIView *label;
-	UIColor *textForegroundColor;
-	UIColor *textBackgroundColor;
+	PLATFORM_VIEW *label;
+	PLATFORM_COLOR *textForegroundColor;
+	PLATFORM_COLOR *textBackgroundColor;
 	
 	BOOL enableDragging;
 	BOOL enableRotation;
@@ -55,36 +54,45 @@
 @property (assign) BOOL enableRotation;
 
 @property (nonatomic, retain) NSObject* data;
-@property (nonatomic, retain) UIView* label;
-@property(nonatomic,retain) UIColor *textForegroundColor;
-@property(nonatomic,retain) UIColor *textBackgroundColor;
+@property (nonatomic, retain) PLATFORM_VIEW* label;
+@property(nonatomic,retain) PLATFORM_COLOR *textForegroundColor;
+@property(nonatomic,retain) PLATFORM_COLOR *textBackgroundColor;
 
 /// the font used for labels when another font is not explicitly requested; currently [UIFont systemFontOfSize:15]
-+ (UIFont *)defaultFont;
++ (PLATFORM_FONT *)defaultFont;
 
 /// returns RMMarker initialized with #image, and the default anchor point (0.5, 0.5)
-- (id) initWithUIImage: (UIImage*) image;
+- (id) initWithImage: (PLATFORM_IMAGE*) image;
+//deprecated
+- (id) initWithUIImage: (PLATFORM_IMAGE*) image;
 /// \brief returns RMMarker initialized with provided image and anchorPoint. 
 /// #anchorPoint x and y range from 0 to 1, normalized to the width and height of image, 
 /// referenced to upper left corner, y increasing top to bottom. To put the image's upper right corner on the marker's 
 /// #projectedLocation, use an anchor point of (1.0, 0.0);
-- (id) initWithUIImage: (UIImage*) image anchorPoint: (CGPoint) anchorPoint;
+- (id) initWithImage: (PLATFORM_IMAGE*) image anchorPoint: (CGPoint) anchorPoint;
+//deprecated
+- (id) initWithUIImage: (PLATFORM_IMAGE*) image anchorPoint: (CGPoint) anchorPoint;
+
 
 /// changes the labelView to a UILabel with supplied #text and default marker font, using existing text foreground/background color.
 - (void) changeLabelUsingText: (NSString*)text;
 /// changes the labelView to a UILabel with supplied #text and default marker font, positioning the text some weird way i don't understand yet. Uses existing text color/background color.
 - (void) changeLabelUsingText: (NSString*)text position:(CGPoint)position;
 /// changes the labelView to a UILabel with supplied #text and default marker font, changing this marker's text foreground/background colors for this and future text strings.
-- (void) changeLabelUsingText: (NSString*)text font:(UIFont*)font foregroundColor:(UIColor*)textColor backgroundColor:(UIColor*)backgroundColor;
+- (void) changeLabelUsingText: (NSString*)text font:(PLATFORM_FONT*)font foregroundColor:(PLATFORM_COLOR*)textColor backgroundColor:(PLATFORM_COLOR*)backgroundColor;
 /// changes the labelView to a UILabel with supplied #text and default marker font, changing this marker's text foreground/background colors for this and future text strings; modifies position as in #changeLabelUsingText:position.
-- (void) changeLabelUsingText: (NSString*)text position:(CGPoint)position font:(UIFont*)font foregroundColor:(UIColor*)textColor backgroundColor:(UIColor*)backgroundColor;
+- (void) changeLabelUsingText: (NSString*)text position:(CGPoint)position font:(PLATFORM_FONT*)font foregroundColor:(PLATFORM_COLOR*)textColor backgroundColor:(PLATFORM_COLOR*)backgroundColor;
 
 - (void) toggleLabel;
 - (void) showLabel;
 - (void) hideLabel;
 
-- (void) replaceUIImage:(UIImage*)image;
-- (void) replaceUIImage:(UIImage*)image anchorPoint:(CGPoint)anchorPoint;
+- (void) replaceImage:(PLATFORM_IMAGE*)image;
+//deprecated
+- (void) replaceUIImage:(PLATFORM_IMAGE*)image;
+- (void) replaceImage:(PLATFORM_IMAGE*)image anchorPoint:(CGPoint)anchorPoint;
+//deprecated
+- (void) replaceUIImage:(PLATFORM_IMAGE*)image anchorPoint:(CGPoint)anchorPoint;
 
 
 - (void) dealloc;

@@ -32,6 +32,10 @@
 #import "RMPixel.h"
 #import "RMProjection.h"
 
+#if !TARGET_OS_IPHONE
+#import "NSColor+MapView.h"
+#endif
+
 @implementation RMPath
 
 @synthesize scaleLineWidth;
@@ -54,8 +58,8 @@
 	drawingMode = kCGPathFillStroke;
 	lineCap = kCGLineCapButt;
 	lineJoin = kCGLineJoinMiter;
-	lineColor = [UIColor blackColor];
-	fillColor = [UIColor redColor];
+	lineColor = [PLATFORM_COLOR blackColor];
+	fillColor = [PLATFORM_COLOR redColor];
 	
 	self.masksToBounds = YES;
 	
@@ -66,7 +70,7 @@
 	
     if ( [self respondsToSelector:@selector(setContentsScale:)] )
     {
-        [(id)self setValue:[[UIScreen mainScreen] valueForKey:@"scale"] forKey:@"contentsScale"];
+        [(id)self setValue:[[PLATFORM_SCREEN mainScreen] valueForKey:@"scale"] forKey:@"contentsScale"];
     }
 	
 	return self;
@@ -297,11 +301,11 @@
 	[self setNeedsDisplay];
 }
 
-- (UIColor *)lineColor
+- (PLATFORM_COLOR *)lineColor
 {
     return lineColor; 
 }
-- (void)setLineColor:(UIColor *)aLineColor
+- (void)setLineColor:(PLATFORM_COLOR *)aLineColor
 {
     if (lineColor != aLineColor) {
         [lineColor release];
@@ -310,11 +314,11 @@
     }
 }
 
-- (UIColor *)fillColor
+- (PLATFORM_COLOR *)fillColor
 {
     return fillColor; 
 }
-- (void)setFillColor:(UIColor *)aFillColor
+- (void)setFillColor:(PLATFORM_COLOR *)aFillColor
 {
     if (fillColor != aFillColor) {
         [fillColor release];

@@ -25,12 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#	import <UIKit/UIKit.h>
-#else
-#	import <Cocoa/Cocoa.h>
-#endif
 #import "RMTile.h"
 
 @class RMTileImage;

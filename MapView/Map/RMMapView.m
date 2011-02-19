@@ -36,6 +36,11 @@
 #import "RMProjection.h"
 #import "RMMarkerManager.h"
 
+#if !TARGET_OS_IPHONE
+#import <math.h>
+#import "RMLayerCollection.h"
+#endif
+
 @interface RMMapView (PrivateMethods)
 // methods for post-touch deceleration, ala UIScrollView
 - (void)startDecelerationWithDelta:(CGSize)delta;
@@ -77,17 +82,25 @@
 	
 	//	[self recalculateImageSet];
 	
+#if TARGET_OS_IPHONE
 	if (enableZoom || enableRotate)
 		[self setMultipleTouchEnabled:TRUE];
 	
-	self.backgroundColor = [UIColor grayColor];
-	
+	self.backgroundColor = [PLATFORM_COLOR grayColor];
+#else
+    [self setWantsLayer:YES];
+#endif
+
 	_constrainMovement=NO;
 	
 //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
+#if TARGET_OS_IPHONE
 - (id)initWithFrame:(CGRect)frame
+#else
+- (id)initWithFrame:(NSRect)frame
+#endif
 {
 	LogMethod();
 	if (self = [super initWithFrame:frame]) {
@@ -97,7 +110,11 @@
 }
 
 /// \deprecated Deprecated any time after 0.5.
+#if TARGET_OS_IPHONE
 - (id)initWithFrame:(CGRect)frame WithLocation:(CLLocationCoordinate2D)latlon
+#else
+- (id)initWithFrame:(NSRect)frame WithLocation:(CLLocationCoordinate2D)latlon
+#endif
 {
 	WarnDeprecated();
 	LogMethod();
@@ -138,14 +155,25 @@
 	[super dealloc];
 }
 
+#if TARGET_OS_IPHONE
 -(void) drawRect: (CGRect) rect
 {
 	[self.contents drawRect:rect];
 }
+#else
+-(void) drawRect: (NSRect) rect
+{
+    [self.contents drawRect:NSRectToCGRect(rect)];
+}
+#endif
 
 -(NSString*) description
 {
+#if TARGET_OS_IPHONE
 	CGRect bounds = [self bounds];
+#else
+    NSRect bounds = [self bounds];
+#endif
 	return [NSString stringWithFormat:@"MapView at %.0f,%.0f-%.0f,%.0f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height];
 }
 
@@ -315,12 +343,20 @@
 			//tjis is copied from [RMMercatorToScreenBounds zoomScreenByFactor]
 			// First we move the origin to the pivot...
 			origin.easting += center.x * metersPerPixel;
+#if TARGET_OS_IPHONE
 			origin.northing += (screenBounds.size.height - center.y) * metersPerPixel;
+#else
+            origin.northing += center.y * metersPerPixel;
+#endif
 			// Then scale by 1/factor
 			metersPerPixel /= _zoomFactor;
 			// Then translate back
 			origin.easting -= center.x * metersPerPixel;
+#if TARGET_OS_IPHONE
 			origin.northing -= (screenBounds.size.height - center.y) * metersPerPixel;
+#else
+            origin.northing -= center.y * metersPerPixel;
+#endif
 			
 			origin = [mtsp.projection wrapPointHorizontally:origin];
 			
@@ -361,6 +397,7 @@
 
 #pragma mark Event handling
 
+#if TARGET_OS_IPHONE
 - (RMGestureDetails) gestureDetails: (NSSet*) touches
 {
 	RMGestureDetails gesture;
@@ -432,6 +469,7 @@
 	
 	return gesture;
 }
+#endif
 
 - (void)resumeExpensiveOperations
 {
@@ -444,6 +482,7 @@
 	[self performSelector:@selector(resumeExpensiveOperations) withObject:nil afterDelay:0.4];	
 }
 
+#if TARGET_OS_IPHONE
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	UITouch *touch = [[touches allObjects] objectAtIndex:0];
@@ -651,6 +690,112 @@
 	
 	[self delayedResumeExpensiveOperations];
 }
+#else
+-(void)mouseDragged:(NSEvent *)theEvent {
+    CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[theEvent locationInWindow]]);
+	CALayer* hit = [self.contents.overlay hitTest:locationInView];
+	if (hit != nil) {
+        if ([hit isKindOfClass: [RMMarker class]]) {
+            if (!_delegateHasShouldDragMarker || (_delegateHasShouldDragMarker && [delegate mapView:self shouldDragMarker:(RMMarker*)hit withEvent:theEvent])) {
+                if (_delegateHasDidDragMarker) {
+                    [delegate mapView:self didDragMarker:(RMMarker*)hit withEvent:theEvent];
+                    return;
+                }
+            }
+        }
+	}
+    if (enableDragging) {
+        CGSize delta;
+        delta.width = [theEvent deltaX];
+        delta.height = -[theEvent deltaY];
+        if (delta.width || delta.height) {
+            [self moveBy:delta];
+        }
+    }
+}
+
+-(void)scrollWheel:(NSEvent *)theEvent {
+    if (enableDragging) {
+        CGSize delta;
+        delta.width = -[theEvent deltaX];
+        delta.height = [theEvent deltaY];
+        if (delta.width || delta.height) {
+            [self moveBy:delta];
+        }
+    }
+}
+
+-(void)singleClick {
+    if ([NSEvent pressedMouseButtons] == 0) {
+        CALayer *hit = [self.contents.overlay hitTest:lastClickLocationInView];
+        if (hit != nil) {
+            CALayer *superlayer = [hit superlayer]; 
+            // See if tap was on a marker or marker label and send delegate protocol method
+            if ([hit isKindOfClass: [RMMarker class]]) {
+                if (_delegateHasTapOnMarker) {
+                    [delegate tapOnMarker:(RMMarker*)hit onMap:self];
+                }
+            } else if (superlayer != nil && [superlayer isKindOfClass: [RMMarker class]]) {
+                if (_delegateHasTapOnLabelForMarker) {
+                    [delegate tapOnLabelForMarker:(RMMarker*)superlayer onMap:self];
+                }
+            } else if ([superlayer superlayer] != nil && [[superlayer superlayer] isKindOfClass: [RMMarker class]]) {
+                if (_delegateHasTapOnLabelForMarker) {
+                    [delegate tapOnLabelForMarker:(RMMarker*)[superlayer superlayer] onMap:self];
+                }
+            } else if (_delegateHasSingleTapOnMap) {
+                [delegate singleTapOnMap:self At:lastClickLocationInView];
+            }
+        }
+    } else if (!enableDragging && enableZoom) {
+        float prevZoomFactor = [self.contents prevNativeZoomFactor];
+        if (prevZoomFactor != 0) {
+            [self zoomByFactor:prevZoomFactor near:lastClickLocationInView animated:YES];
+        }
+    }
+}
+
+-(void)mouseDown:(NSEvent *)theEvent {
+    NSInteger clickCount = [theEvent clickCount];
+    CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[theEvent locationInWindow]]);
+    if (clickCount >= 2) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(singleClick) object:nil];
+        if (_delegateHasDoubleTapOnMap) {
+            [delegate doubleTapOnMap:self At:locationInView];
+        } else if (enableZoom) {
+            if ([NSEvent modifierFlags] == NSControlKeyMask) {
+                float prevZoomFactor = [self.contents prevNativeZoomFactor];
+                if (prevZoomFactor != 0) {
+                    [self zoomByFactor:prevZoomFactor near:locationInView animated:YES];
+                }                
+            } else {
+                float nextZoomFactor = [self.contents nextNativeZoomFactor];
+                if (nextZoomFactor != 0) {
+                    [self zoomByFactor:nextZoomFactor near:locationInView animated:YES];
+                }
+            }
+        }
+    } else if (clickCount == 1) {
+        lastClickLocationInView = locationInView;
+        [self performSelector:@selector(singleClick) withObject:nil afterDelay:[NSEvent doubleClickInterval]];
+    }
+}
+
+-(void)magnifyWithEvent:(NSEvent *)event {
+    if (enableZoom) {
+        float zoomFactor = [event magnification] + 1.0;
+        CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[event locationInWindow]]);
+        [self zoomByFactor:zoomFactor near:locationInView];
+    }
+}
+
+-(void)rotateWithEvent:(NSEvent *)event {
+    if (enableRotate) {
+        float angle = [event rotation]*M_PI/180;
+        self.rotation += angle;
+    }
+}
+#endif
 
 #pragma mark Deceleration
 
@@ -702,15 +847,27 @@
 	[contents didReceiveMemoryWarning];
 }
 
+#if TARGET_OS_IPHONE
 - (void)setFrame:(CGRect)frame
 {
-  CGRect r = self.frame;
-  [super setFrame:frame];
-  // only change if the frame changes AND there is contents
-  if (!CGRectEqualToRect(r, frame) && contents) {
-    [contents setFrame:frame];
-  }
+    CGRect r = self.frame;
+    [super setFrame:frame];
+    // only change if the frame changes AND there is contents
+    if (!CGRectEqualToRect(r, frame) && contents) {
+        [contents setFrame:frame];
+    }
 }
+#else
+- (void)setFrame:(NSRect)frame
+{
+    NSRect r = self.frame;
+    [super setFrame:frame];
+    // only change if the frame changes AND there is contents
+    if (!NSEqualRects(r, frame) && contents) {
+        [contents setFrame:frame];
+    }
+}
+#endif
 
 - (void)setRotation:(CGFloat)angle
 {
@@ -722,7 +879,17 @@
 	
 	rotation = angle;
 		
+#if TARGET_OS_IPHONE		
 	self.transform = CGAffineTransformMakeRotation(rotation);
+#else
+    CGSize translation = CGSizeMake(self.frame.size.width/2, self.frame.size.height/2);
+    
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(translation.width, translation.height);
+    transform = CGAffineTransformRotate(transform, rotation);
+    transform = CGAffineTransformTranslate(transform, -translation.width, -translation.height);
+    
+    [self.layer setAffineTransform:transform];
+#endif    
 	[contents setRotation:rotation];	
 	
 	[CATransaction commit];

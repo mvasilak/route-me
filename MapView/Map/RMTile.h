@@ -28,7 +28,12 @@
 #ifndef _TILE_H_
 #define _TILE_H_
 
-#include <CoreGraphics/CGGeometry.h>
+#import <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#import <CoreGraphics/CoreGraphics.h>
+#else
+#import <ApplicationServices/ApplicationServices.h>
+#endif
 //#include <Quartz/Quartz.h>
 #include <stdint.h>
 /*! \file RMTile.h

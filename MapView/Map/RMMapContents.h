@@ -24,7 +24,6 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-#import <UIKit/UIKit.h>
 
 #import "RMFoundation.h"
 #import "RMLatLong.h"
@@ -158,24 +157,24 @@ enum {
 @property (readwrite, assign) short tileDepth;
 @property (readonly, assign) BOOL fullyLoaded;
 
-- (id)initWithView: (UIView*) view;
-- (id)initWithView: (UIView*) view
+- (id)initWithView: (PLATFORM_VIEW*) view;
+- (id)initWithView: (PLATFORM_VIEW*) view
 		tilesource:(id<RMTileSource>)newTilesource;
 /// designated initializer
-- (id)initWithView:(UIView*)view
+- (id)initWithView:(PLATFORM_VIEW*)view
 		tilesource:(id<RMTileSource>)tilesource
 	  centerLatLon:(CLLocationCoordinate2D)initialCenter
 		 zoomLevel:(float)initialZoomLevel
 	  maxZoomLevel:(float)maxZoomLevel
 	  minZoomLevel:(float)minZoomLevel
-   backgroundImage:(UIImage *)backgroundImage;
+   backgroundImage:(PLATFORM_IMAGE *)backgroundImage;
 
 /// \deprecated subject to removal at any moment after 0.5 is released
-- (id) initForView: (UIView*) view;
+- (id) initForView: (PLATFORM_VIEW*) view;
 /// \deprecated subject to removal at any moment after 0.5 is released
-- (id) initForView: (UIView*) view WithLocation:(CLLocationCoordinate2D)latlong;
+- (id) initForView: (PLATFORM_VIEW*) view WithLocation:(CLLocationCoordinate2D)latlong;
 /// \deprecated subject to removal at any moment after 0.5 is released
-- (id)initForView:(UIView*)view WithTileSource:(id<RMTileSource>)tileSource WithRenderer:(RMMapRenderer*)renderer LookingAt:(CLLocationCoordinate2D)latlong;
+- (id)initForView:(PLATFORM_VIEW*)view WithTileSource:(id<RMTileSource>)tileSource WithRenderer:(RMMapRenderer*)renderer LookingAt:(CLLocationCoordinate2D)latlong;
 
 - (void)setFrame:(CGRect)frame;
 

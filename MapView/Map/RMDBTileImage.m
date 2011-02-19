@@ -48,7 +48,7 @@
 		FMResultSet* rs = [db executeQuery:@"select image from tiles where tilekey = ?", key];
 		FMDBErrorCheck(db);
 		if ([rs next]) {
-			[self updateImageUsingImage:[[[UIImage alloc] initWithData:[rs dataForColumn:@"image"]] autorelease]];
+			[self updateImageUsingImage:[[[PLATFORM_IMAGE alloc] initWithData:[rs dataForColumn:@"image"]] autorelease]];
 		}
 		[rs close];
 	}

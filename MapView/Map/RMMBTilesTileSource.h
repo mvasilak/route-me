@@ -34,7 +34,6 @@
 //  http://mapbox.com/documentation/mbtiles-file-format
 //
 
-#import <Foundation/Foundation.h>
 #import "RMTileSource.h"
 
 @class RMFractalTileProjection;

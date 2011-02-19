@@ -25,14 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-	#import <UIKit/UIKit.h>
-#else
-	#import <Cocoa/Cocoa.h>
-typedef NSImage UIImage;
-#endif
-
 #import "RMFoundation.h"
 #import "RMNotifications.h"
 #import "RMTile.h"
@@ -76,13 +68,13 @@ typedef NSImage UIImage;
 - (void)cancelLoading;
 
 - (void)updateImageUsingData: (NSData*) data;
-- (void)updateImageUsingImage: (UIImage*) image;
+- (void)updateImageUsingImage: (PLATFORM_IMAGE*) image;
 
 - (void)touch;
 
 - (BOOL)isLoaded;
 
-- (void) displayProxy:(UIImage*)img;
+- (void) displayProxy:(PLATFORM_IMAGE*)img;
 
 @property (readwrite, assign) CGRect screenLocation;
 @property (readonly, assign) RMTile tile;

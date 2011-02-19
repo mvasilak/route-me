@@ -104,7 +104,7 @@
 
 + (RMTileImage*)imageForTile:(RMTile) tile withData: (NSData*)data
 {
-	UIImage *image = [[UIImage alloc] initWithData:data];
+	PLATFORM_IMAGE *image = [[PLATFORM_IMAGE alloc] initWithData:data];
 	RMTileImage *tileImage;
 
 	if (!image)
@@ -130,16 +130,20 @@
 
 - (void)updateImageUsingData: (NSData*) data
 {
-       [self updateImageUsingImage:[UIImage imageWithData:data]];
+       [self updateImageUsingImage:[[[PLATFORM_IMAGE alloc] initWithData:data] autorelease]];
 
        NSDictionary *d = [NSDictionary dictionaryWithObject:data forKey:@"data"];
        [[NSNotificationCenter defaultCenter] postNotificationName:RMMapImageLoadedNotification object:self userInfo:d];
 }
 
-- (void)updateImageUsingImage: (UIImage*) rawImage
+- (void)updateImageUsingImage: (PLATFORM_IMAGE*) rawImage
 {
-	layer.contents = (id)[rawImage CGImage];
-//	[self animateIn];
+#if TARGET_OS_IPHONE
+    layer.contents = (id)[rawImage CGImage]; 
+#else
+    layer.contents = (id)[rawImage CGImageForProposedRect:NULL context:NULL hints:NULL];
+#endif
+    //	[self animateIn];
 }
 
 - (BOOL)isLoaded
@@ -226,9 +230,13 @@
 	[self touch];
 }
 
-- (void) displayProxy:(UIImage*) img
+- (void) displayProxy:(PLATFORM_IMAGE*) img
 {
+#if TARGET_OS_IPHONE
         layer.contents = (id)[img CGImage]; 
+#else
+        layer.contents = (id)[img CGImageForProposedRect:NULL context:NULL hints:NULL];
+#endif
 }
 
 @end

@@ -25,8 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <UIKit/UIKit.h>
-
 #import "RMFoundation.h"
 #import "RMLatLong.h"
 #import "RMMapLayer.h"
@@ -44,9 +42,9 @@
 	RMProjectedPoint projectedLocation;
 	
 	/// The color of the line, or the outline if a polygon
-	UIColor *lineColor;
+	PLATFORM_COLOR *lineColor;
 	/// The color of polygon's fill.
-	UIColor *fillColor;
+	PLATFORM_COLOR *fillColor;
 	
 	CGMutablePathRef path;
 
@@ -84,8 +82,8 @@
 @property (nonatomic, assign) RMProjectedPoint projectedLocation;
 @property (assign) BOOL enableDragging;
 @property (assign) BOOL enableRotation;
-@property (readwrite, assign) UIColor *lineColor;
-@property (readwrite, assign) UIColor *fillColor;
+@property (readwrite, assign) PLATFORM_COLOR *lineColor;
+@property (readwrite, assign) PLATFORM_COLOR *fillColor;
 
 - (void) moveToXY: (RMProjectedPoint) point;
 - (void) moveToScreenPoint: (CGPoint) point;

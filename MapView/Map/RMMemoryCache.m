@@ -79,7 +79,7 @@
 
 -(void) imageLoadingCancelled: (NSNotification*)notification
 {
-	[self removeTile: [[notification object] tile]];
+    [self removeTile:[(RMTileImage *)[notification object] tile]];
 }
 
 -(RMTileImage*) cachedImage:(RMTile)tile

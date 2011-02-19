@@ -21,9 +21,9 @@
 - (void)setUp {
     [super setUp];
 
-	CGRect appRect = [[UIScreen mainScreen] applicationFrame];
-	contentView = [[UIView alloc] initWithFrame:appRect];
-	contentView.backgroundColor = [UIColor greenColor];
+	CGRect appRect = [[PLATFORM_SCREEN mainScreen] applicationFrame];
+	contentView = [[PLATFORM_VIEW alloc] initWithFrame:appRect];
+	contentView.backgroundColor = [PLATFORM_COLOR greenColor];
 	
 	initialCenter.latitude = 66.44;
 	initialCenter.longitude = -178.0;
@@ -88,7 +88,7 @@
 	NSUInteger nColumns = 8;
 	double columnSpacing = 2.0;
 	
-	UIImage *markerImage = [UIImage imageNamed:@"marker-red.png"];
+	PLATFORM_IMAGE *markerImage = [PLATFORM_IMAGE imageNamed:@"marker-red.png"];
 	STAssertNotNil(markerImage, @"testMarkerCreation marker image did not load");
 	markerPosition.latitude = initialCenter.latitude - ((nRows - 1)/2.0 * columnSpacing);
 	NSUInteger i, j;
@@ -117,7 +117,7 @@
 	NSUInteger nColumns = 8;
 	double columnSpacing = 2.0;
 	
-	UIImage *markerImage = [UIImage imageNamed:@"marker-red.png"];
+	PLATFORM_IMAGE *markerImage = [PLATFORM_IMAGE imageNamed:@"marker-red.png"];
 	markerPosition.latitude = initialCenter.latitude;
 	markerPosition.longitude = initialCenter.longitude - ((nColumns - 1)/2.0 * columnSpacing);
 	NSUInteger j;
@@ -181,7 +181,7 @@
 	NSUInteger nColumns = 8;
 	double columnSpacing = 2.0;
 	
-	UIImage *markerImage = [UIImage imageNamed:@"marker-red.png"];
+	PLATFORM_IMAGE *markerImage = [PLATFORM_IMAGE imageNamed:@"marker-red.png"];
 	markerPosition.latitude = initialCenter.latitude;
 	markerPosition.longitude = initialCenter.longitude - ((nColumns - 1)/2.0 * columnSpacing);
 	NSUInteger j;

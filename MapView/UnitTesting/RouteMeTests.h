@@ -16,7 +16,7 @@
 ///and http://code.google.com/p/google-toolbox-for-mac/wiki/iPhoneUnitTesting for guidance.
 @interface RouteMeTests : SenTestCase {
 	RMMapView *mapView;
-	UIView *contentView;
+	PLATFORM_VIEW *contentView;
 	CLLocationCoordinate2D initialCenter;
 }
 

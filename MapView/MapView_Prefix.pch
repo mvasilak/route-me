@@ -3,9 +3,9 @@
 //
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 #endif
 
 #if DEBUG
@@ -14,10 +14,24 @@
 #define WarnDeprecated() NSLog(@"***** WARNING: deprecated method call: -[%@ %@] (line %d)", self, NSStringFromSelector(_cmd), __LINE__)
 #else  
 // DEBUG not defined:
-
 #define RMLog(args...)    // do nothing.
 #define LogMethod() 
 #define WarnDeprecated() 
 #define NS_BLOCK_ASSERTIONS 1
 #endif
 
+#if TARGET_OS_IPHONE
+#define PLATFORM_COLOR UIColor
+#define PLATFORM_EVENT UIEvent
+#define PLATFORM_FONT UIFont
+#define PLATFORM_IMAGE UIImage
+#define PLATFORM_SCREEN UIScreen
+#define PLATFORM_VIEW UIView
+#else
+#define PLATFORM_COLOR NSColor
+#define PLATFORM_EVENT NSEvent
+#define PLATFORM_FONT NSFont
+#define PLATFORM_IMAGE NSImage
+#define PLATFORM_SCREEN NSScreen
+#define PLATFORM_VIEW NSView
+#endif

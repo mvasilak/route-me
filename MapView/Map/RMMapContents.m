@@ -75,7 +75,7 @@
 
 #pragma mark Initialisation
 
-- (id)initWithView: (UIView*) view
+- (id)initWithView: (PLATFORM_VIEW*) view
 {	
 	LogMethod();
 	CLLocationCoordinate2D here;
@@ -91,7 +91,7 @@
 			  backgroundImage:nil];
 }
 
-- (id)initWithView: (UIView*) view
+- (id)initWithView: (PLATFORM_VIEW*) view
 		tilesource:(id<RMTileSource>)newTilesource
 {	
 	LogMethod();
@@ -108,13 +108,13 @@
 			  backgroundImage:nil];
 }
 
-- (id)initWithView:(UIView*)newView
+- (id)initWithView:(PLATFORM_VIEW*)newView
 		tilesource:(id<RMTileSource>)newTilesource
 	  centerLatLon:(CLLocationCoordinate2D)initialCenter
 		 zoomLevel:(float)initialZoomLevel
 	  maxZoomLevel:(float)maxZoomLevel
 	  minZoomLevel:(float)minZoomLevel
-   backgroundImage:(UIImage *)backgroundImage
+   backgroundImage:(PLATFORM_IMAGE *)backgroundImage
 {
 	LogMethod();
 	if (![super init])
@@ -131,14 +131,18 @@
 	tileLoader = nil;
     
     screenScale = 1.0;
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+    if ([[PLATFORM_SCREEN mainScreen] respondsToSelector:@selector(scale)])
     {
-        screenScale = [[[UIScreen mainScreen] valueForKey:@"scale"] floatValue];
+        screenScale = [[[PLATFORM_SCREEN mainScreen] valueForKey:@"scale"] floatValue];
     }
 
 	boundingMask = RMMapMinWidthBound;
 
+#if TARGET_OS_IPHONE
 	mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[newTilesource projection] ToScreenBounds:[newView bounds]];
+#else
+	mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[newTilesource projection] ToScreenBounds:NSRectToCGRect([newView bounds])];
+#endif
 	
 	layer = [[newView layer] retain];
 
@@ -171,12 +175,16 @@
 	
 	markerManager = [[RMMarkerManager alloc] initWithContents:self];
 	
+#if TARGET_OS_IPHONE
 	[newView setNeedsDisplay];
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(handleMemoryWarningNotification:) 
 												 name:UIApplicationDidReceiveMemoryWarningNotification 
 											   object:nil];
-
+#else
+    [newView setNeedsDisplay:YES];
+#endif
+    
 	
 	RMLog(@"Map contents initialised. view: %@ tileSource %@ renderer %@", newView, tileSource, renderer);
 	return self;
@@ -184,14 +192,14 @@
 
 
 /// deprecated at any moment after release 0.5	
-- (id) initForView: (UIView*) view
+- (id) initForView: (PLATFORM_VIEW*) view
 {
 	WarnDeprecated();
 	return [self initWithView:view];
 }
 
 /// deprecated at any moment after release 0.5
-- (id) initForView: (UIView*) view WithLocation:(CLLocationCoordinate2D)latlong
+- (id) initForView: (PLATFORM_VIEW*) view WithLocation:(CLLocationCoordinate2D)latlong
 {
 	WarnDeprecated();
 	LogMethod();
@@ -207,7 +215,7 @@
 
 
 /// deprecated at any moment after release 0.5
-- (id) initForView: (UIView*) view WithTileSource: (id<RMTileSource>)_tileSource WithRenderer: (RMMapRenderer*)_renderer LookingAt:(CLLocationCoordinate2D)latlong
+- (id) initForView: (PLATFORM_VIEW*) view WithTileSource: (id<RMTileSource>)_tileSource WithRenderer: (RMMapRenderer*)_renderer LookingAt:(CLLocationCoordinate2D)latlong
 {
 	WarnDeprecated();
 	LogMethod();
@@ -258,11 +266,15 @@
 	
 	markerManager = [[RMMarkerManager alloc] initWithContents:self];
 	
+#if TARGET_OS_IPHONE
 	[view setNeedsDisplay];
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(handleMemoryWarningNotification:) 
 												 name:UIApplicationDidReceiveMemoryWarningNotification 
 											   object:nil];
+#else
+    [view setNeedsDisplay:YES];
+#endif
 	
 	RMLog(@"Map contents initialised. view: %@ tileSource %@ renderer %@", view, tileSource, renderer);
 	
@@ -492,12 +504,21 @@
             double nSteps = round(kZoomAnimationAnimationTime / kZoomAnimationStepTime);
             double zoomIncr = zoomDelta / nSteps;
             
+#if TARGET_OS_IPHONE
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                                       [NSNumber numberWithDouble:zoomIncr], @"zoomIncr",
                                       [NSNumber numberWithDouble:targetZoom], @"targetZoom",
                                       [NSValue valueWithCGPoint:pivot], @"pivot",
                                       [NSNumber numberWithFloat:zoomFactor], @"factor",
                                       callback, @"callback", nil];
+#else
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      [NSNumber numberWithDouble:zoomIncr], @"zoomIncr",
+                                      [NSNumber numberWithDouble:targetZoom], @"targetZoom",
+                                      [NSValue valueWithPoint:pivot], @"pivot",
+                                      [NSNumber numberWithFloat:zoomFactor], @"factor",
+                                      callback, @"callback", nil];
+#endif
             [NSTimer scheduledTimerWithTimeInterval:kZoomAnimationStepTime
                                              target:self
                                            selector:@selector(animatedZoomStep:)
@@ -535,14 +556,22 @@
 		[timer invalidate];	// ASAP
 		id<RMMapContentsAnimationCallback> callback = [userInfo objectForKey:@"callback"];
 		if (callback && [callback respondsToSelector:@selector(animationFinishedWithZoomFactor:near:)]) {
+#if TARGET_OS_IPHONE
 			[callback animationFinishedWithZoomFactor:[[userInfo objectForKey:@"factor"] floatValue] near:[[userInfo objectForKey:@"pivot"] CGPointValue]];
+#else
+			[callback animationFinishedWithZoomFactor:[[userInfo objectForKey:@"factor"] floatValue] near:[[userInfo objectForKey:@"pivot"] pointValue]];
+#endif
 		}
 		[userInfo release];
 	}
 	else
 	{
 		float zoomFactorStep = exp2f(zoomIncr);
+#if TARGET_OS_IPHONE
 		[self zoomByFactor:zoomFactorStep near:[[[timer userInfo] objectForKey:@"pivot"] CGPointValue] animated:NO];
+#else
+		[self zoomByFactor:zoomFactorStep near:[[[timer userInfo] objectForKey:@"pivot"] pointValue] animated:NO];
+#endif
 	}
 }
 
@@ -724,7 +753,7 @@
 	CALayer *testLayer = [[CALayer alloc] init];
 	
 	[testLayer setFrame:CGRectMake(100, 100, 200, 200)];
-	[testLayer setBackgroundColor:[[UIColor brownColor] CGColor]];
+	[testLayer setBackgroundColor:[[PLATFORM_COLOR brownColor] CGColor]];
 	
 	RMLog(@"added test layer");
 	[overlay addSublayer:testLayer];*/

@@ -28,8 +28,6 @@
 #ifndef _RMLATLONG_H_
 #define _RMLATLONG_H_
 
-#import <TargetConditionals.h>
-#if TARGET_OS_IPHONE
 #import <CoreLocation/CoreLocation.h>
 #import "RMGlobalConstants.h"
 
@@ -43,37 +41,6 @@ typedef struct {
 	CLLocationCoordinate2D northeast;
 	CLLocationCoordinate2D southwest;
 } RMSphericalTrapezium;
-
-#else
-
-/* From CoreLocation by Apple inc. Copyright 2008 Apple Computer, Inc. All rights reserved. */
-
-/*
- *  CLLocationDegrees
- *  
- *  Discussion:
- *    Type used to represent a latitude or longitude coordinate in degrees under the WGS 84 reference
- *    frame. The degree can be positive (North and East) or negative (South and West).  
- */
-typedef double CLLocationDegrees;
-/*
- *  CLLocationCoordinate2D
- *  
- *  Discussion:
- *    A structure that contains a geographical coordinate.
- *
- *  Fields:
- *    latitude:
- *      The latitude in degrees.
- *    longitude:
- *      The longitude in degrees.
- */
-typedef struct {
-	CLLocationDegrees latitude;
-	CLLocationDegrees longitude;
-} CLLocationCoordinate2D;
-
-#endif
 
 /*! \struct RMLatLong 
  \brief latitude/longitude of a point, in WGS-84 degrees

@@ -29,22 +29,22 @@
 
 @implementation RMTileProxy
 
-static UIImage *_errorTile = nil;
-static UIImage *_missingTile = nil;
+static PLATFORM_IMAGE *_errorTile = nil;
+static PLATFORM_IMAGE *_missingTile = nil;
 
-+ (UIImage*) errorTile
++ (PLATFORM_IMAGE*) errorTile
 {
 	if (_errorTile) return _errorTile;
 	
-	_errorTile = [[UIImage imageNamed:@"error.png"] retain];
+	_errorTile = [[PLATFORM_IMAGE imageNamed:@"error.png"] retain];
 	return _errorTile;
 }
 
-+ (UIImage*) missingTile
++ (PLATFORM_IMAGE*) missingTile
 {
 	if (_missingTile) return _missingTile;
 	
-	_missingTile = [[UIImage imageNamed:@"missing.png"] retain];
+	_missingTile = [[PLATFORM_IMAGE imageNamed:@"missing.png"] retain];
 	return _missingTile;
 }
 

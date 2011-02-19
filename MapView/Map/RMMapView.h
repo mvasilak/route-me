@@ -87,15 +87,13 @@ svn checkout http://route-me.googlecode.com/svn/trunk/ route-me-read-only
  
  */
 
-#import <UIKit/UIKit.h>
-#import <CoreGraphics/CGGeometry.h>
-
 #import "RMNotifications.h"
 #import "RMFoundation.h"
 #import "RMLatLong.h"
 #import "RMMapViewDelegate.h"
 #import "RMMapContents.h"
 
+#if TARGET_OS_IPHONE
 /*! 
  \struct RMGestureDetails
  iPhone-specific mapview stuff. Handles event handling, whatnot.
@@ -106,6 +104,7 @@ typedef struct {
 	float averageDistanceFromCenter;
 	int numTouches;
 } RMGestureDetails;
+#endif
 
 @class RMMapContents;
 
@@ -119,17 +118,21 @@ typedef struct {
  
  \bug No accessors for enableDragging, enableZoom, deceleration, decelerationFactor. Changing enableDragging does not change multitouchEnabled for the view.
  */
-@interface RMMapView : UIView <RMMapContentsFacade, RMMapContentsAnimationCallback>
+@interface RMMapView : PLATFORM_VIEW <RMMapContentsFacade, RMMapContentsAnimationCallback>
 {
 	RMMapContents *contents;
 	id<RMMapViewDelegate> delegate;
 	BOOL enableDragging;
 	BOOL enableZoom;
-        BOOL enableRotate;
+    BOOL enableRotate;
+#if TARGET_OS_IPHONE
 	RMGestureDetails lastGesture;
+#else
+    CGPoint lastClickLocationInView;
+#endif
 	float decelerationFactor;
 	BOOL deceleration;
-        CGFloat rotation;
+    CGFloat rotation;
 	
 @private
    	BOOL _delegateHasBeforeMapMove;

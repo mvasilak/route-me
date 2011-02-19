@@ -30,9 +30,13 @@
 #import "RMProjection.h"
 #import "RMMercatorToScreenProjection.h"
 
+#if !TARGET_OS_IPHONE
+#import "NSColor+MapView.h"
+#endif
+
 #define kDefaultLineWidth 10
-#define kDefaultLineColor [UIColor blackColor]
-#define kDefaultFillColor [UIColor blueColor]
+#define kDefaultLineColor [PLATFORM_COLOR blackColor]
+#define kDefaultFillColor [PLATFORM_COLOR blueColor]
 
 @interface RMCircle ()
 
@@ -134,7 +138,7 @@
 	[self setPosition:[[mapContents mercatorToScreenProjection] projectXYPoint:projectedLocation]];
 }
 
-- (void)setLineColor:(UIColor*)newLineColor {
+- (void)setLineColor:(PLATFORM_COLOR*)newLineColor {
 	if (lineColor != newLineColor) {
 		[lineColor release];
 		lineColor = [newLineColor retain];
@@ -142,7 +146,7 @@
 	}
 }
 
-- (void)setFillColor:(UIColor*)newFillColor {
+- (void)setFillColor:(PLATFORM_COLOR*)newFillColor {
 	if (fillColor != newFillColor) {
 		[fillColor release];
 		fillColor = [newFillColor retain];

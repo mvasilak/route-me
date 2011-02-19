@@ -25,7 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
 #import "RMTile.h"
 
 @class RMTileImage;
@@ -35,7 +34,7 @@
 	
 }
 
-+(UIImage*) errorTile;
-+(UIImage*) missingTile;
++(PLATFORM_IMAGE*) errorTile;
++(PLATFORM_IMAGE*) missingTile;
 
 @end

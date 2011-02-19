@@ -25,7 +25,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
 #import "RMFoundation.h"
 #import "RMLatLong.h"
 #import "RMMapLayer.h"
@@ -43,8 +42,8 @@
 	BOOL enableDragging;
 	BOOL enableRotation;
 	
-	UIColor* lineColor;
-	UIColor* fillColor;
+	PLATFORM_COLOR* lineColor;
+	PLATFORM_COLOR* fillColor;
 	CGFloat radiusInMeters;
 	CGFloat lineWidthInPixels;
 	BOOL scaleLineWidth;
@@ -56,8 +55,8 @@
 @property (nonatomic, assign) RMProjectedPoint projectedLocation;
 @property (assign) BOOL enableDragging;
 @property (assign) BOOL enableRotation;
-@property (nonatomic, retain) UIColor* lineColor;
-@property (nonatomic, retain) UIColor* fillColor;
+@property (nonatomic, retain) PLATFORM_COLOR* lineColor;
+@property (nonatomic, retain) PLATFORM_COLOR* fillColor;
 @property (nonatomic, assign) CGFloat radiusInMeters;
 @property (nonatomic, assign) CGFloat lineWidthInPixels;
 

@@ -113,13 +113,21 @@
 
 	// First we move the origin to the pivot...
 	origin.easting += aPixelPoint.x * metersPerPixel;
+#if TARGET_OS_IPHONE
 	origin.northing += (screenBounds.size.height - aPixelPoint.y) * metersPerPixel;
+#else
+    origin.northing += aPixelPoint.y * metersPerPixel;
+#endif
 	// Then scale by 1/factor
 	metersPerPixel /= factor;
 	// Then translate back
 	origin.easting -= aPixelPoint.x * metersPerPixel;
+#if TARGET_OS_IPHONE
 	origin.northing -= (screenBounds.size.height - aPixelPoint.y) * metersPerPixel;
-
+#else
+    origin.northing -= aPixelPoint.y * metersPerPixel;
+#endif    
+    
 	origin = [projection wrapPointHorizontally:origin];
 	
 	//RMLog(@"test: %f %f", test.x, test.y);
@@ -191,7 +199,11 @@
 		aPixelPoint.x = ( normalizedProjectedPoint.easting - normalizedProjectedScreenBounds.origin.easting ) / aScale;
 	}
 	
+#if TARGET_OS_IPHONE
 	aPixelPoint.y = screenBounds.size.height - ( normalizedProjectedPoint.northing - normalizedProjectedScreenBounds.origin.northing ) / aScale;
+#else
+    aPixelPoint.y = ( normalizedProjectedPoint.northing - normalizedProjectedScreenBounds.origin.northing ) / aScale;
+#endif    
 	
 	return aPixelPoint;
 }
@@ -242,7 +254,11 @@
 {
 	RMProjectedPoint aPoint;
 	aPoint.easting = origin.easting + aPixelPoint.x * aScale;
+#if TARGET_OS_IPHONE
 	aPoint.northing = origin.northing + (screenBounds.size.height - aPixelPoint.y) * aScale;
+#else
+    aPoint.northing = origin.northing + aPixelPoint.y * aScale;
+#endif    
 	
 	origin = [projection wrapPointHorizontally:origin];
 	
@@ -269,7 +285,11 @@
 {
 	RMProjectedSize aSize;
 	aSize.width = aPixelSize.width * metersPerPixel;
+#if TARGET_OS_IPHONE
 	aSize.height = -aPixelSize.height * metersPerPixel;
+#else
+    aSize.height = aPixelSize.height * metersPerPixel;
+#endif    
 	return aSize;
 }
 

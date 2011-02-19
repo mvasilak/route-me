@@ -27,6 +27,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #import "RMCloudMadeMapSource.h"
+#if !TARGET_OS_IPHONE
+#import <SystemConfiguration/SystemConfiguration.h>
+#endif
 
 @implementation RMCloudMadeMapSource
 
@@ -73,9 +76,18 @@ NSString * const RMCloudMadeAccessTokenRequestFailed = @"RMCloudMadeAccessTokenR
 	if([self readTokenFromFile])
 			return;
 	
+#if TARGET_OS_IPHONE
 	NSString* url = [NSString stringWithFormat:@"%@/token/%@?userid=%u",CMTokenAuthorizationServer,accessKey,
-					[[UIDevice currentDevice].uniqueIdentifier hash]];
-
+                     [[UIDevice currentDevice].uniqueIdentifier hash]];
+#else
+    CFArrayRef interfaces = SCNetworkInterfaceCopyAll();
+    CFIndex interfaceIndex = 0;
+    SCNetworkInterfaceRef thisInterface = CFArrayGetValueAtIndex(interfaces, interfaceIndex);
+    CFStringRef macAddr = SCNetworkInterfaceGetHardwareAddressString(thisInterface);
+    NSString* url = [NSString stringWithFormat:@"%@/token/%@?userid=%u",CMTokenAuthorizationServer,accessKey,
+                     [(NSString *)macAddr hash]];
+#endif
+    
 	
 	NSData* data = nil;
 	RMLog(@"%s, url = %@\n",__FUNCTION__,url);

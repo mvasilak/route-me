@@ -25,7 +25,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include "RMPixel.h"
+#import "RMPixel.h"
 
 CGPoint RMScaleCGPointAboutPoint(CGPoint point, float factor, CGPoint pivot)
 {

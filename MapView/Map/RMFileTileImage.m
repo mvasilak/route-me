@@ -35,7 +35,7 @@
 	if (![super initWithTile:_tile])
 		return nil;
 
-	UIImage *image = [[UIImage alloc] initWithContentsOfFile:file];
+	PLATFORM_IMAGE *image = [[PLATFORM_IMAGE alloc] initWithContentsOfFile:file];
 
         [self updateImageUsingImage:image];
 

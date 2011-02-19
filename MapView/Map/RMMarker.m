@@ -41,9 +41,9 @@
 
 #define defaultMarkerAnchorPoint CGPointMake(0.5, 0.5)
 
-+ (UIFont *)defaultFont
++ (PLATFORM_FONT *)defaultFont
 {
-	return [UIFont systemFontOfSize:15];
+	return [PLATFORM_FONT systemFontOfSize:15];
 }
 
 // init
@@ -51,25 +51,35 @@
 {
     if (self = [super init]) {
         label = nil;
-        textForegroundColor = [UIColor blackColor];
-        textBackgroundColor = [UIColor clearColor];
+        textForegroundColor = [PLATFORM_COLOR blackColor];
+        textBackgroundColor = [PLATFORM_COLOR clearColor];
 		enableDragging = YES;
 		enableRotation = YES;
     }
     return self;
 }
 
-- (id) initWithUIImage: (UIImage*) image
+- (id) initWithImage: (PLATFORM_IMAGE*) image
 {
-	return [self initWithUIImage:image anchorPoint: defaultMarkerAnchorPoint];
+	return [self initWithImage:image anchorPoint: defaultMarkerAnchorPoint];
 }
 
-- (id) initWithUIImage: (UIImage*) image anchorPoint: (CGPoint) _anchorPoint
+//deprecated
+- (id) initWithUIImage: (PLATFORM_IMAGE*) image
+{
+    return [self initWithImage:image anchorPoint: defaultMarkerAnchorPoint];
+}
+
+- (id) initWithImage: (PLATFORM_IMAGE*) image anchorPoint: (CGPoint) _anchorPoint
 {
 	if (![self init])
 		return nil;
 	
-	self.contents = (id)[image CGImage];
+#if TARGET_OS_IPHONE
+    self.contents = (id)[image CGImage];
+#else
+    self.contents = (id)[image CGImageForProposedRect:NULL context:NULL hints:NULL];
+#endif
 	self.bounds = CGRectMake(0,0,image.size.width,image.size.height);
 	self.anchorPoint = _anchorPoint;
 	
@@ -79,22 +89,45 @@
 	return self;
 }
 
-- (void) replaceUIImage: (UIImage*) image
+//deprecated
+- (id) initWithUIImage: (PLATFORM_IMAGE*) image anchorPoint: (CGPoint) _anchorPoint
 {
-	[self replaceUIImage:image anchorPoint:defaultMarkerAnchorPoint];
+    return [self initWithImage:image anchorPoint:_anchorPoint];
 }
 
-- (void) replaceUIImage: (UIImage*) image
+- (void) replaceImage: (PLATFORM_IMAGE*) image
+{
+	[self replaceImage:image anchorPoint:defaultMarkerAnchorPoint];
+}
+
+//deprecated
+- (void) replaceUIImage: (PLATFORM_IMAGE*) image
+{
+	[self replaceImage:image anchorPoint:defaultMarkerAnchorPoint];
+}
+
+- (void) replaceImage: (PLATFORM_IMAGE*) image
 			anchorPoint: (CGPoint) _anchorPoint
 {
-	self.contents = (id)[image CGImage];
+#if TARGET_OS_IPHONE
+    self.contents = (id)[image CGImage];
+#else
+    self.contents = (id)[image CGImageForProposedRect:NULL context:NULL hints:NULL];
+#endif    
 	self.bounds = CGRectMake(0,0,image.size.width,image.size.height);
 	self.anchorPoint = _anchorPoint;
 	
 	self.masksToBounds = NO;
 }
 
-- (void) setLabel:(UIView*)aView
+//deprecated
+- (void) replaceUIImage: (PLATFORM_IMAGE*) image
+			anchorPoint: (CGPoint) _anchorPoint
+{
+    [self replaceImage:image anchorPoint:_anchorPoint];
+}    
+
+- (void) setLabel:(PLATFORM_VIEW*)aView
 {
 	if (label == aView) {
 		return;
@@ -116,8 +149,15 @@
 
 - (void) changeLabelUsingText: (NSString*)text
 {
+#if TARGET_OS_IPHONE
 	CGPoint position = CGPointMake([self bounds].size.width / 2 - [text sizeWithFont:[RMMarker defaultFont]].width / 2, 4);
-/// \bug hardcoded font name
+#else
+    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:[RMMarker defaultFont] forKey:NSFontAttributeName]];
+    CGPoint position = CGPointMake([self bounds].size.width / 2 - textSize.width / 2, 
+                                   [self bounds].size.height - 8 - textSize.height
+                                   );
+#endif
+    /// \bug hardcoded font name
 	[self changeLabelUsingText:text position:position font:[RMMarker defaultFont] foregroundColor:[self textForegroundColor] backgroundColor:[self textBackgroundColor]];
 }
 
@@ -126,32 +166,61 @@
 	[self changeLabelUsingText:text position:position font:[RMMarker defaultFont] foregroundColor:[self textForegroundColor] backgroundColor:[self textBackgroundColor]];
 }
 
-- (void) changeLabelUsingText: (NSString*)text font:(UIFont*)font foregroundColor:(UIColor*)textColor backgroundColor:(UIColor*)backgroundColor
+- (void) changeLabelUsingText: (NSString*)text font:(PLATFORM_FONT*)font foregroundColor:(PLATFORM_COLOR*)textColor backgroundColor:(PLATFORM_COLOR*)backgroundColor
 {
+#if TARGET_OS_IPHONE
 	CGPoint position = CGPointMake([self bounds].size.width / 2 - [text sizeWithFont:font].width / 2, 4);
+#else
+    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
+    CGPoint position = CGPointMake([self bounds].size.width / 2 - textSize.width / 2, 
+                                   [self bounds].size.height - 8 - textSize.height
+                                   );
+#endif
 	[self setTextForegroundColor:textColor];
 	[self setTextBackgroundColor:backgroundColor];
 	[self changeLabelUsingText:text  position:position font:font foregroundColor:textColor backgroundColor:backgroundColor];
 }
 
-- (void) changeLabelUsingText: (NSString*)text position:(CGPoint)position font:(UIFont*)font foregroundColor:(UIColor*)textColor backgroundColor:(UIColor*)backgroundColor
+- (void) changeLabelUsingText: (NSString*)text position:(CGPoint)position font:(PLATFORM_FONT*)font foregroundColor:(PLATFORM_COLOR*)textColor backgroundColor:(PLATFORM_COLOR*)backgroundColor
 {
+#if TARGET_OS_IPHONE
 	CGSize textSize = [text sizeWithFont:font];
 	CGRect frame = CGRectMake(position.x,
 							  position.y,
 							  textSize.width+4,
 							  textSize.height+4);
-	
 	UILabel *aLabel = [[UILabel alloc] initWithFrame:frame];
+#else
+    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
+	CGRect frame = CGRectMake(position.x - 4,
+							  position.y,
+							  textSize.width + 8,
+							  textSize.height + 4);
+    NSTextField *aLabel = [[NSTextField alloc] initWithFrame:frame];
+    [aLabel setWantsLayer:YES];
+    aLabel.layer.frame = frame;
+    [aLabel setEditable:NO];
+    [aLabel setBezeled:NO];
+#endif
 	[self setTextForegroundColor:textColor];
 	[self setTextBackgroundColor:backgroundColor];
+#if TARGET_OS_IPHONE
 	[aLabel setNumberOfLines:0];
 	[aLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+#else
+    [aLabel setAutoresizingMask:NSViewWidthSizable];
+    aLabel.layer.autoresizingMask = kCALayerWidthSizable;
+#endif
 	[aLabel setBackgroundColor:backgroundColor];
 	[aLabel setTextColor:textColor];
 	[aLabel setFont:font];
+#if TARGET_OS_IPHONE
 	[aLabel setTextAlignment:UITextAlignmentCenter];
 	[aLabel setText:text];
+#else
+    [aLabel setAlignment:NSCenterTextAlignment];
+    [aLabel setStringValue:text];
+#endif
 	
 	[self setLabel:aLabel];
 	[aLabel release];
