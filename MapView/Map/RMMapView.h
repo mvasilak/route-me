@@ -125,6 +125,8 @@ typedef struct {
 	BOOL enableDragging;
 	BOOL enableZoom;
     BOOL enableRotate;
+    BOOL constrainMovementLatitudinally;
+    BOOL constrainMovementLongitudinally;
 #if TARGET_OS_IPHONE
 	RMGestureDetails lastGesture;
 #else
@@ -153,7 +155,6 @@ typedef struct {
 	NSTimer *_decelerationTimer;
 	CGSize _decelerationDelta;
 	
-	BOOL _constrainMovement;
 	RMProjectedPoint NEconstraint, SWconstraint;
 	
 	BOOL _contentsIsSet; // "contents" must be set, but is initialized lazily to allow apps to override defaults in -awakeFromNib
@@ -167,6 +168,8 @@ typedef struct {
 @property (readwrite) BOOL enableDragging;
 @property (readwrite) BOOL enableZoom;
 @property (readwrite) BOOL enableRotate;
+@property (readwrite) BOOL constrainMovementLatitudinally;
+@property (readwrite) BOOL constrainMovementLongitudinally;
 
 @property (nonatomic, retain, readonly) RMMarkerManager *markerManager;
 
@@ -188,6 +191,7 @@ typedef struct {
 - (void)moveBy: (CGSize) delta;
 
 -(void)setConstraintsSW:(CLLocationCoordinate2D)sw NE:(CLLocationCoordinate2D)ne;
+-(void)setConstraintsToPlanetBounds;
 
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) aPoint;
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) aPoint animated:(BOOL)animated;

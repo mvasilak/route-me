@@ -59,6 +59,8 @@
 @synthesize enableDragging;
 @synthesize enableZoom;
 @synthesize enableRotate;
+@synthesize constrainMovementLatitudinally;
+@synthesize constrainMovementLongitudinally;
 
 #pragma mark --- begin constants ----
 #define kDefaultDecelerationFactor .88f
@@ -77,6 +79,8 @@
 	enableDragging = YES;
 	enableZoom = YES;
 	enableRotate = NO;
+    constrainMovementLatitudinally = NO;
+    constrainMovementLatitudinally = NO;
 	decelerationFactor = kDefaultDecelerationFactor;
 	deceleration = NO;
 	
@@ -90,8 +94,6 @@
 #else
     [self setWantsLayer:YES];
 #endif
-
-	_constrainMovement=NO;
 	
 //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
@@ -255,14 +257,22 @@
 	
 	NEconstraint = [proj latLongToPoint:ne];
 	SWconstraint = [proj latLongToPoint:sw];
-	
-	_constrainMovement=YES;
+}
+
+-(void)setConstraintsToPlanetBounds
+{
+    RMProjection *proj = self.contents.projection;
+    
+    NEconstraint.easting = proj.planetBounds.origin.easting + proj.planetBounds.size.width;
+    NEconstraint.northing = proj.planetBounds.origin.northing + proj.planetBounds.size.height;
+    SWconstraint.easting = proj.planetBounds.origin.easting;
+    SWconstraint.northing = proj.planetBounds.origin.northing;
 }
 
 -(void)moveBy:(CGSize)delta 
 {
 
-	if ( _constrainMovement ) 
+	if ( constrainMovementLatitudinally || constrainMovementLongitudinally ) 
 	{
 		//bounds are
 		RMMercatorToScreenProjection *mtsp=self.contents.mercatorToScreenProjection;
@@ -280,10 +290,14 @@
 		
 		// see if new bounds are within constrained bounds, and constrain if necessary
         BOOL constrained = NO;
-		if ( newBounds.origin.northing < SWconstraint.northing ) { newBounds.origin.northing = SWconstraint.northing; constrained = YES; }
-        if ( newBounds.origin.northing+newBounds.size.height > NEconstraint.northing ) { newBounds.origin.northing = NEconstraint.northing - newBounds.size.height; constrained = YES; }
-        if ( newBounds.origin.easting < SWconstraint.easting ) { newBounds.origin.easting = SWconstraint.easting; constrained = YES; }
-        if ( newBounds.origin.easting+newBounds.size.width > NEconstraint.easting ) { newBounds.origin.easting = NEconstraint.easting - newBounds.size.width; constrained = YES; }
+        if ( constrainMovementLatitudinally ) {
+            if ( newBounds.origin.northing < SWconstraint.northing ) { newBounds.origin.northing = SWconstraint.northing; constrained = YES; }
+            if ( newBounds.origin.northing+newBounds.size.height > NEconstraint.northing ) { newBounds.origin.northing = NEconstraint.northing - newBounds.size.height; constrained = YES; }
+        }
+        if ( constrainMovementLongitudinally ) {
+            if ( newBounds.origin.easting < SWconstraint.easting ) { newBounds.origin.easting = SWconstraint.easting; constrained = YES; }
+            if ( newBounds.origin.easting+newBounds.size.width > NEconstraint.easting ) { newBounds.origin.easting = NEconstraint.easting - newBounds.size.width; constrained = YES; }
+        }
         if ( constrained ) 
         {
             // Adjust delta to match constraint
@@ -305,7 +319,7 @@
 }
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) center animated:(BOOL)animated
 {
-	if ( _constrainMovement ) 
+	if ( constrainMovementLatitudinally || constrainMovementLongitudinally ) 
 	{
 		//check that bounds after zoom don't exceed map constraints
 		//the logic is copued from the method zoomByFactor,
@@ -368,9 +382,13 @@
 			zRect.size.height = screenBounds.size.height * metersPerPixel;
 			 
 			//can zoom only if within bounds
-			canZoom= !(zRect.origin.northing < SWconstraint.northing || zRect.origin.northing+zRect.size.height> NEconstraint.northing ||
-			  zRect.origin.easting < SWconstraint.easting || zRect.origin.easting+zRect.size.width > NEconstraint.easting);
-				
+            canZoom = !(constrainMovementLatitudinally && 
+                        (zRect.origin.northing < SWconstraint.northing || 
+                         zRect.origin.northing+zRect.size.height> NEconstraint.northing)) && 
+            !(constrainMovementLongitudinally &&
+              (zRect.origin.easting < SWconstraint.easting ||
+               zRect.origin.easting+zRect.size.width > NEconstraint.easting));
+            
 		}
 		
 		if(!canZoom){
