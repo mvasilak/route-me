@@ -711,7 +711,7 @@
 }
 #else
 -(void)mouseDragged:(NSEvent *)theEvent {
-    CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[theEvent locationInWindow]]);
+    CGPoint locationInView = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
 	CALayer* hit = [self.contents.overlay hitTest:locationInView];
 	if (hit != nil) {
         if ([hit isKindOfClass: [RMMarker class]]) {
@@ -776,7 +776,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     NSInteger clickCount = [theEvent clickCount];
-    CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[theEvent locationInWindow]]);
+    CGPoint locationInView = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
     if (clickCount >= 2) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(singleClick) object:nil];
         if (_delegateHasDoubleTapOnMap) {
@@ -803,7 +803,7 @@
 -(void)magnifyWithEvent:(NSEvent *)event {
     if (enableZoom) {
         float zoomFactor = [event magnification] + 1.0;
-        CGPoint locationInView = NSPointToCGPoint([self convertPointFromBase:[event locationInWindow]]);
+        CGPoint locationInView = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
         [self zoomByFactor:zoomFactor near:locationInView];
     }
 }
