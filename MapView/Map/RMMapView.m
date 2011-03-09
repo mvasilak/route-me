@@ -803,7 +803,7 @@
 -(void)magnifyWithEvent:(NSEvent *)event {
     if (enableZoom) {
         float zoomFactor = [event magnification] + 1.0;
-        CGPoint locationInView = NSPointToCGPoint([self convertPoint:[theEvent locationInWindow] fromView:nil]);
+        CGPoint locationInView = NSPointToCGPoint([self convertPoint:[event locationInWindow] fromView:nil]);
         [self zoomByFactor:zoomFactor near:locationInView];
     }
 }
