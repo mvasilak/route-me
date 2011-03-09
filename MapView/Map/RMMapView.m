@@ -380,7 +380,7 @@
 			zRect.origin = origin;
 			zRect.size.width = screenBounds.size.width * metersPerPixel;
 			zRect.size.height = screenBounds.size.height * metersPerPixel;
-			 
+
 			//can zoom only if within bounds
             canZoom = !(constrainMovementLatitudinally && 
                         (zRect.origin.northing < SWconstraint.northing || 
@@ -879,11 +879,56 @@
 #else
 - (void)setFrame:(NSRect)frame
 {
+    // If the new frame is larger, a zoom in may be required.
+    RMProjectedSize constraintsSize = {NEconstraint.easting - SWconstraint.easting, NEconstraint.northing - SWconstraint.northing};
+    float adjustedZoomFactor = [self adjustZoomForBoundingMask:1.0 
+                                                    withBounds:CGRectMake(0, 0, frame.size.width, frame.size.height) 
+                                        LongitudinalConstraint:constrainMovementLongitudinally 
+                                         LatitudinalConstraint:constrainMovementLatitudinally 
+                                               ConstraintsSize:constraintsSize
+                                ];
+    if (adjustedZoomFactor != 1.0) {
+        //test: constraints
+        [self zoomByFactor:adjustedZoomFactor near:[self.contents latLongToPixel:self.contents.mapCenter]];
+    }
+    
     NSRect r = self.frame;
     [super setFrame:frame];
     // only change if the frame changes AND there is contents
     if (!NSEqualRects(r, frame) && contents) {
         [contents setFrame:frame];
+    }
+    
+    // If the constraints have been violated by the resize, move the map to a proper center.
+    // The zoom level should be fixed by the zoom in above.
+    RMProjectedRect projectedBounds = [self.contents.mercatorToScreenProjection projectedBounds];
+    BOOL constrained = NO;
+    if (constrainMovementLatitudinally) {
+        if (projectedBounds.origin.northing < SWconstraint.northing) {
+            projectedBounds.origin.northing = SWconstraint.northing;
+            constrained = YES;
+        }
+        if (projectedBounds.origin.northing + projectedBounds.size.height > NEconstraint.northing) { 
+            projectedBounds.origin.northing = NEconstraint.northing - projectedBounds.size.height;
+            constrained = YES; 
+        }
+    }
+    if (constrainMovementLongitudinally) {
+        if (projectedBounds.origin.easting < SWconstraint.easting) { 
+            projectedBounds.origin.easting = SWconstraint.easting; 
+            constrained = YES; 
+        }
+        if (projectedBounds.origin.easting + projectedBounds.size.width > NEconstraint.easting) { 
+            projectedBounds.origin.easting = NEconstraint.easting - projectedBounds.size.width;
+            constrained = YES; 
+        }
+    }
+    if (constrained) {
+        RMProjectedPoint newMapCenter = {
+            projectedBounds.origin.easting + projectedBounds.size.width/2,
+            projectedBounds.origin.northing + projectedBounds.size.height/2
+        };
+        [self moveToProjectedPoint:newMapCenter];
     }
 }
 #endif

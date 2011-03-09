@@ -286,7 +286,11 @@
   CGRect bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
   [mercatorToScreenProjection setScreenBounds:bounds];
   background.frame = bounds;
+#if TARGET_OS_IPHONE
   layer.frame = frame;
+#else
+  layer.bounds = bounds;
+#endif
   overlay.frame = bounds;
   [tileLoader clearLoadedBounds];
   [tileLoader updateLoadedImages];
@@ -352,56 +356,75 @@
 }
 
 /// \bug doesn't really adjust anything, just makes a computation. CLANG flags some dead assignments (write-only variables)
-- (float)adjustZoomForBoundingMask:(float)zoomFactor
+- (float)adjustZoomForBoundingMask:(float)zoomFactor 
+                        withBounds:(CGRect)zoomBounds 
+            LongitudinalConstraint:(BOOL)longitudinalConstraint 
+             LatitudinalConstraint:(BOOL)latitudinalConstraint 
+                   ConstraintsSize:(RMProjectedSize)constraintsSize 
 {
 	if ( boundingMask ==  RMMapNoMinBound )
 		return zoomFactor;
-	
+    
 	double newMPP = self.metersPerPixel / zoomFactor;
-	
+
 	RMProjectedRect mercatorBounds = [[tileSource projection] planetBounds];
 	
 	// Check for MinWidthBound
 	if ( boundingMask & RMMapMinWidthBound )
 	{
-		double newMapContentsWidth = mercatorBounds.size.width / newMPP;
-		double screenBoundsWidth = [self screenBounds].size.width;
+        double newMapContentsWidth = mercatorBounds.size.width;
+        if (longitudinalConstraint && (constraintsSize.width < newMapContentsWidth)) {
+            newMapContentsWidth = constraintsSize.width;
+        }
+        newMapContentsWidth /= newMPP;
+		double zoomBoundsWidth = zoomBounds.size.width;
 		double mapContentWidth;
 		
-		if ( newMapContentsWidth < screenBoundsWidth )
+		if ( newMapContentsWidth < zoomBoundsWidth )
 		{
 			// Calculate new zoom facter so that it does not shrink the map any further. 
 			mapContentWidth = mercatorBounds.size.width / self.metersPerPixel;
-			zoomFactor = screenBoundsWidth / mapContentWidth;
-			
-			//newMPP = self.metersPerPixel / zoomFactor;
-			//newMapContentsWidth = mercatorBounds.size.width / newMPP;
-		}
-		
+			zoomFactor = zoomBoundsWidth / mapContentWidth;
+            newMPP = self.metersPerPixel / zoomFactor;
+		}		
 	}
-	
+    
 	// Check for MinHeightBound	
 	if ( boundingMask & RMMapMinHeightBound )
 	{
-		double newMapContentsHeight = mercatorBounds.size.height / newMPP;
-		double screenBoundsHeight = [self screenBounds].size.height;
+        double newMapContentsHeight = mercatorBounds.size.height;
+        if (latitudinalConstraint && (constraintsSize.height < newMapContentsHeight)) {
+            newMapContentsHeight = constraintsSize.height;
+        }
+        newMapContentsHeight /= newMPP;
+		double zoomBoundsHeight = zoomBounds.size.height;
 		double mapContentHeight;
 		
-		if ( newMapContentsHeight < screenBoundsHeight )
+		if ( newMapContentsHeight < zoomBoundsHeight )
 		{
 			// Calculate new zoom facter so that it does not shrink the map any further. 
 			mapContentHeight = mercatorBounds.size.height / self.metersPerPixel;
-			zoomFactor = screenBoundsHeight / mapContentHeight;
-			
-			//newMPP = self.metersPerPixel / zoomFactor;
-			//newMapContentsHeight = mercatorBounds.size.height / newMPP;
-		}
-		
+			zoomFactor = zoomBoundsHeight / mapContentHeight;
+		}		
 	}
 	
-	//[self adjustMapPlacementWithScale:newMPP];
-	
 	return zoomFactor;
+}
+
+- (float)adjustZoomForBoundingMask:(float)zoomFactor withBounds:(CGRect)zoomBounds 
+{
+    RMProjectedSize constraintsSize = {0, 0};
+    return [self adjustZoomForBoundingMask:zoomFactor 
+                                withBounds:zoomBounds 
+                    LongitudinalConstraint:NO 
+                     LatitudinalConstraint:NO 
+                           ConstraintsSize:constraintsSize
+            ];
+}
+
+- (float)adjustZoomForBoundingMask:(float)zoomFactor
+{
+    return [self adjustZoomForBoundingMask:zoomFactor withBounds:[self screenBounds]];
 }
 
 /// This currently is not called because it does not handle the case when the map is continous or not continous.  At a certain scale

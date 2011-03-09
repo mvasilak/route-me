@@ -192,7 +192,13 @@ enum {
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) center animated:(BOOL) animated withCallback:(id<RMMapContentsAnimationCallback>)callback;
 
 - (void)zoomInToNextNativeZoomAt:(CGPoint) pivot;
-- (void)zoomOutToNextNativeZoomAt:(CGPoint) pivot; 
+- (void)zoomOutToNextNativeZoomAt:(CGPoint) pivot;
+- (float)adjustZoomForBoundingMask:(float)zoomFactor 
+                        withBounds:(CGRect)zoomBounds 
+            LongitudinalConstraint:(BOOL)longitudinalConstraint 
+             LatitudinalConstraint:(BOOL)latitudinalConstraint 
+                   ConstraintsSize:(RMProjectedSize)constraintsSize;
+- (float)adjustZoomForBoundingMask:(float)zoomFactor withBounds:(CGRect)zoomBounds;
 - (float)adjustZoomForBoundingMask:(float)zoomFactor;
 - (void)adjustMapPlacementWithScale:(float)aScale;
 - (float)nextNativeZoomFactor;
@@ -253,7 +259,13 @@ enum {
 - (void)zoomByFactor: (float) zoomFactor near:(CGPoint) center animated:(BOOL) animated;
 
 - (void)zoomInToNextNativeZoomAt:(CGPoint) pivot;
-- (void)zoomOutToNextNativeZoomAt:(CGPoint) pivot; 
+- (void)zoomOutToNextNativeZoomAt:(CGPoint) pivot;
+- (float)adjustZoomForBoundingMask:(float)zoomFactor 
+                        withBounds:(CGRect)zoomBounds 
+            LongitudinalConstraint:(BOOL)longitudinalConstraint 
+             LatitudinalConstraint:(BOOL)latitudinalConstraint 
+                   ConstraintsSize:(RMProjectedSize)constraintsSize;
+- (float)adjustZoomForBoundingMask:(float)zoomFactor withBounds:(CGRect)zoomBounds;
 - (float)adjustZoomForBoundingMask:(float)zoomFactor;
 - (void)adjustMapPlacementWithScale:(float)aScale;
 
