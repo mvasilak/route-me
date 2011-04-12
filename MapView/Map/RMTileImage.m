@@ -187,13 +187,6 @@
 		[customActions setObject:[NSNull null] forKey:kCAOnOrderOut];
         [customActions setObject:[NSNull null] forKey:kCAOnOrderIn];
 
-		CATransition *fadein = [[CATransition alloc] init];
-		fadein.duration = 0.3;
-		fadein.type = kCATransitionReveal;
-		[customActions setObject:fadein forKey:@"contents"];
-		[fadein release];
-
-		
 		layer.actions=customActions;
 		
 		layer.edgeAntialiasingMask = 0;

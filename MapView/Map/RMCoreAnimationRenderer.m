@@ -102,6 +102,13 @@
 	
 //	RMLog(@"tileAdded");
 	
+    CATransition *animation = [CATransition animation];
+
+    animation.type = kCATransitionFade;
+    animation.duration = 0.1;
+    
+    [layer addAnimation:animation forKey:@"sublayers"];
+    
 	NSUInteger min = 0, max = [tiles count];
 	CALayer *sublayer = [image layer];
 
