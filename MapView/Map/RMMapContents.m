@@ -226,7 +226,7 @@
 	
 	self.boundingMask = RMMapMinWidthBound;
 //	targetView = view;
-	mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[_tileSource projection] ToScreenBounds:[view bounds]];
+	mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[_tileSource projection] ToScreenBounds:NSRectToCGRect([view bounds])];
 
 	tileSource = nil;
 	projection = nil;
@@ -538,7 +538,7 @@
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                                       [NSNumber numberWithDouble:zoomIncr], @"zoomIncr",
                                       [NSNumber numberWithDouble:targetZoom], @"targetZoom",
-                                      [NSValue valueWithPoint:pivot], @"pivot",
+                                      [NSValue valueWithPoint:NSPointFromCGPoint(pivot)], @"pivot",
                                       [NSNumber numberWithFloat:zoomFactor], @"factor",
                                       callback, @"callback", nil];
 #endif
@@ -582,7 +582,7 @@
 #if TARGET_OS_IPHONE
 			[callback animationFinishedWithZoomFactor:[[userInfo objectForKey:@"factor"] floatValue] near:[[userInfo objectForKey:@"pivot"] CGPointValue]];
 #else
-			[callback animationFinishedWithZoomFactor:[[userInfo objectForKey:@"factor"] floatValue] near:[[userInfo objectForKey:@"pivot"] pointValue]];
+			[callback animationFinishedWithZoomFactor:[[userInfo objectForKey:@"factor"] floatValue] near:NSPointToCGPoint([[userInfo objectForKey:@"pivot"] pointValue])];
 #endif
 		}
 		[userInfo release];
@@ -593,7 +593,7 @@
 #if TARGET_OS_IPHONE
 		[self zoomByFactor:zoomFactorStep near:[[[timer userInfo] objectForKey:@"pivot"] CGPointValue] animated:NO];
 #else
-		[self zoomByFactor:zoomFactorStep near:[[[timer userInfo] objectForKey:@"pivot"] pointValue] animated:NO];
+		[self zoomByFactor:zoomFactorStep near:NSPointToCGPoint([[[timer userInfo] objectForKey:@"pivot"] pointValue]) animated:NO];
 #endif
 	}
 }

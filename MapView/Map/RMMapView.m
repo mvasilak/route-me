@@ -896,7 +896,7 @@
     [super setFrame:frame];
     // only change if the frame changes AND there is contents
     if (!NSEqualRects(r, frame) && contents) {
-        [contents setFrame:frame];
+        [contents setFrame:NSRectToCGRect(frame)];
     }
     
     // If the constraints have been violated by the resize, move the map to a proper center.

@@ -152,7 +152,7 @@
 #if TARGET_OS_IPHONE
 	CGPoint position = CGPointMake([self bounds].size.width / 2 - [text sizeWithFont:[RMMarker defaultFont]].width / 2, 4);
 #else
-    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:[RMMarker defaultFont] forKey:NSFontAttributeName]];
+    CGSize textSize = NSSizeToCGSize([text sizeWithAttributes:[NSDictionary dictionaryWithObject:[RMMarker defaultFont] forKey:NSFontAttributeName]]);
     CGPoint position = CGPointMake([self bounds].size.width / 2 - textSize.width / 2, 
                                    [self bounds].size.height - 8 - textSize.height
                                    );
@@ -171,7 +171,7 @@
 #if TARGET_OS_IPHONE
 	CGPoint position = CGPointMake([self bounds].size.width / 2 - [text sizeWithFont:font].width / 2, 4);
 #else
-    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
+    CGSize textSize = NSSizeToCGSize([text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]]);
     CGPoint position = CGPointMake([self bounds].size.width / 2 - textSize.width / 2, 
                                    [self bounds].size.height - 8 - textSize.height
                                    );
@@ -191,12 +191,12 @@
 							  textSize.height+4);
 	UILabel *aLabel = [[UILabel alloc] initWithFrame:frame];
 #else
-    CGSize textSize = [text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]];
+    CGSize textSize = NSSizeToCGSize([text sizeWithAttributes:[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]]);
 	CGRect frame = CGRectMake(position.x - 4,
 							  position.y,
 							  textSize.width + 8,
 							  textSize.height + 4);
-    NSTextField *aLabel = [[NSTextField alloc] initWithFrame:frame];
+    NSTextField *aLabel = [[NSTextField alloc] initWithFrame:NSRectFromCGRect(frame)];
     [aLabel setWantsLayer:YES];
     aLabel.layer.frame = frame;
     [aLabel setEditable:NO];
