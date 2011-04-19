@@ -30,10 +30,6 @@
 #import "RMProjection.h"
 #import "RMMercatorToScreenProjection.h"
 
-#if !TARGET_OS_IPHONE
-#import "NSColor+MapView.h"
-#endif
-
 #define kDefaultLineWidth 10
 #define kDefaultLineColor [PLATFORM_COLOR blackColor]
 #define kDefaultFillColor [PLATFORM_COLOR blueColor]
@@ -125,8 +121,24 @@
 	circlePath = newPath;
 	
 	[[self shapeLayer] setPath:newPath];
+#if TARGET_OS_IPHONE
 	[[self shapeLayer] setFillColor:[fillColor CGColor]];
 	[[self shapeLayer] setStrokeColor:[lineColor CGColor]];
+#else
+    CGFloat colorComponents[4];
+    [[fillColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getComponents:colorComponents];
+    [[self shapeLayer] setFillColor:(CGColorRef)[(id)CGColorCreateGenericRGB(colorComponents[0], 
+                                                                             colorComponents[1],
+                                                                             colorComponents[2],
+                                                                             colorComponents[3]
+                                                                             ) autorelease]];
+    [[lineColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getComponents:colorComponents];
+    [[self shapeLayer] setStrokeColor:(CGColorRef)[(id)CGColorCreateGenericRGB(colorComponents[0], 
+                                                                             colorComponents[1],
+                                                                             colorComponents[2],
+                                                                             colorComponents[3]
+                                                                             ) autorelease]];
+#endif
 	[[self shapeLayer] setLineWidth:lineWidthInPixels];
 }
 

@@ -11,8 +11,6 @@
 		61324B4E130F41B100C9D243 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4D130F41B100C9D243 /* CoreFoundation.framework */; };
 		61324B50130F41C400C9D243 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4F130F41C400C9D243 /* CoreLocation.framework */; };
 		61324B52130F41D600C9D243 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B51130F41D600C9D243 /* QuartzCore.framework */; };
-		61324B5B130F434A00C9D243 /* NSColor+MapView.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B59130F434A00C9D243 /* NSColor+MapView.h */; };
-		61324B5C130F434A00C9D243 /* NSColor+MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61324B5A130F434A00C9D243 /* NSColor+MapView.m */; };
 		61324BDD130F43DE00C9D243 /* RMGlobalConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B5E130F43DE00C9D243 /* RMGlobalConstants.h */; };
 		61324BDE130F43DE00C9D243 /* RMNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B5F130F43DE00C9D243 /* RMNotifications.h */; };
 		61324BDF130F43DE00C9D243 /* RMTilesUpdateDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 61324B60130F43DE00C9D243 /* RMTilesUpdateDelegate.h */; };
@@ -147,8 +145,6 @@
 		61324B4F130F41C400C9D243 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		61324B51130F41D600C9D243 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		61324B57130F421900C9D243 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
-		61324B59130F434A00C9D243 /* NSColor+MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+MapView.h"; sourceTree = "<group>"; };
-		61324B5A130F434A00C9D243 /* NSColor+MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+MapView.m"; sourceTree = "<group>"; };
 		61324B5E130F43DE00C9D243 /* RMGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMGlobalConstants.h; sourceTree = "<group>"; };
 		61324B5F130F43DE00C9D243 /* RMNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMNotifications.h; sourceTree = "<group>"; };
 		61324B60130F43DE00C9D243 /* RMTilesUpdateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMTilesUpdateDelegate.h; sourceTree = "<group>"; };
@@ -295,7 +291,6 @@
 			isa = PBXGroup;
 			children = (
 				61324B5D130F43DE00C9D243 /* Map */,
-				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				32DBCF5E0370ADEE00C91783 /* MapView-osx_Prefix.pch */,
@@ -334,15 +329,6 @@
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
-		32C88DFF0371C24200C91783 /* Other Sources */ = {
-			isa = PBXGroup;
-			children = (
-				61324B59130F434A00C9D243 /* NSColor+MapView.h */,
-				61324B5A130F434A00C9D243 /* NSColor+MapView.m */,
-			);
-			name = "Other Sources";
 			sourceTree = "<group>";
 		};
 		61324B42130F416000C9D243 /* Products */ = {
@@ -599,7 +585,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61324B5B130F434A00C9D243 /* NSColor+MapView.h in Headers */,
 				61324BDD130F43DE00C9D243 /* RMGlobalConstants.h in Headers */,
 				61324BDE130F43DE00C9D243 /* RMNotifications.h in Headers */,
 				61324BDF130F43DE00C9D243 /* RMTilesUpdateDelegate.h in Headers */,
@@ -724,7 +709,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61324B5C130F434A00C9D243 /* NSColor+MapView.m in Sources */,
 				61324BE1130F43DE00C9D243 /* RMMapView.m in Sources */,
 				61324BE3130F43DE00C9D243 /* RMMapContents.m in Sources */,
 				61324BE6130F43DE00C9D243 /* RMGeoHash.m in Sources */,

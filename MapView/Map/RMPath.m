@@ -32,10 +32,6 @@
 #import "RMPixel.h"
 #import "RMProjection.h"
 
-#if !TARGET_OS_IPHONE
-#import "NSColor+MapView.h"
-#endif
-
 @implementation RMPath
 
 @synthesize scaleLineWidth;
@@ -177,9 +173,17 @@
 
 		if (isDrawing)
 		{
+#if TARGET_OS_IPHONE
 			CGPathAddLineToPoint(path, NULL, point.easting, -point.northing);
+#else
+            CGPathAddLineToPoint(path, NULL, point.easting, point.northing);
+#endif
 		} else {
+#if TARGET_OS_IPHONE
 			CGPathMoveToPoint(path, NULL, point.easting, -point.northing);
+#else
+            CGPathMoveToPoint(path, NULL, point.easting, point.northing);
+#endif
 		}
 
 		[self recalculateGeometry];
@@ -244,10 +248,25 @@
 	
 	CGContextSetLineWidth(theContext, scaledLineWidth);
 	CGContextSetLineCap(theContext, lineCap);
-	CGContextSetLineJoin(theContext, lineJoin);	
+	CGContextSetLineJoin(theContext, lineJoin);
+#if TARGET_OS_IPHONE
 	CGContextSetStrokeColorWithColor(theContext, [lineColor CGColor]);
 	CGContextSetFillColorWithColor(theContext, [fillColor CGColor]);
-	
+#else
+    CGFloat colorComponents[4];
+    [[lineColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getComponents:colorComponents];
+    CGContextSetStrokeColorWithColor(theContext, (CGColorRef)[(id)CGColorCreateGenericRGB(colorComponents[0], 
+                                                                                          colorComponents[1],
+                                                                                          colorComponents[2],
+                                                                                          colorComponents[3]
+                                                                                          ) autorelease]);
+    [[fillColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getComponents:colorComponents];
+    CGContextSetFillColorWithColor(theContext, (CGColorRef)[(id)CGColorCreateGenericRGB(colorComponents[0], 
+                                                                                        colorComponents[1],
+                                                                                        colorComponents[2],
+                                                                                        colorComponents[3]
+                                                                                        ) autorelease]);
+#endif
 	// according to Apple's documentation, DrawPath closes the path if it's a filled style, so a call to ClosePath isn't necessary
 	CGContextDrawPath(theContext, drawingMode);
 }
