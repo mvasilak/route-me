@@ -520,7 +520,7 @@
 
 		if (y >= zoomedMinY && y <= zoomedMaxY)
 		{
-			if (zoomedMinX <= zoomedMinY)
+			if (zoomedMinX <= zoomedMaxX)
 			{
 				if (x >= zoomedMinX && x <= zoomedMaxX)
 					continue;
