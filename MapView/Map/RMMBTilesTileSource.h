@@ -49,7 +49,10 @@
 {
     RMFractalTileProjection *tileProjection;
     FMDatabase *db;
+    
+    BOOL isOriginSW;
 }
+@property (nonatomic, assign) BOOL isOriginSW;
 
 - (id)initWithTileSetURL:(NSURL *)tileSetURL;
 - (int)tileSideLength;

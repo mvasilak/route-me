@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		612380C513A760EE00D9FFF9 /* NSUserDefaults+RouteMe.h in Headers */ = {isa = PBXBuildFile; fileRef = 612380C313A760EE00D9FFF9 /* NSUserDefaults+RouteMe.h */; };
+		612380C613A760EE00D9FFF9 /* NSUserDefaults+RouteMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 612380C413A760EE00D9FFF9 /* NSUserDefaults+RouteMe.m */; };
+		612380C813A7611C00D9FFF9 /* RouteMe.h in Headers */ = {isa = PBXBuildFile; fileRef = 612380C713A7611C00D9FFF9 /* RouteMe.h */; };
 		61324B4C130F419200C9D243 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4B130F419200C9D243 /* libsqlite3.dylib */; };
 		61324B4E130F41B100C9D243 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4D130F41B100C9D243 /* CoreFoundation.framework */; };
 		61324B50130F41C400C9D243 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61324B4F130F41C400C9D243 /* CoreLocation.framework */; };
@@ -139,6 +142,9 @@
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF5E0370ADEE00C91783 /* MapView-osx_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MapView-osx_Prefix.pch"; sourceTree = "<group>"; };
+		612380C313A760EE00D9FFF9 /* NSUserDefaults+RouteMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+RouteMe.h"; sourceTree = "<group>"; };
+		612380C413A760EE00D9FFF9 /* NSUserDefaults+RouteMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+RouteMe.m"; sourceTree = "<group>"; };
+		612380C713A7611C00D9FFF9 /* RouteMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteMe.h; sourceTree = "<group>"; };
 		61324B41130F416000C9D243 /* Proj4-osx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Proj4-osx.xcodeproj"; path = "../Proj4/Proj4-osx.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		61324B4B130F419200C9D243 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		61324B4D130F41B100C9D243 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -331,6 +337,15 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
+		612380C213A760C300D9FFF9 /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				612380C313A760EE00D9FFF9 /* NSUserDefaults+RouteMe.h */,
+				612380C413A760EE00D9FFF9 /* NSUserDefaults+RouteMe.m */,
+			);
+			name = Additions;
+			sourceTree = "<group>";
+		};
 		61324B42130F416000C9D243 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,6 +357,8 @@
 		61324B5D130F43DE00C9D243 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				612380C213A760C300D9FFF9 /* Additions */,
+				612380C713A7611C00D9FFF9 /* RouteMe.h */,
 				61324B5E130F43DE00C9D243 /* RMGlobalConstants.h */,
 				61324B5F130F43DE00C9D243 /* RMNotifications.h */,
 				61324B60130F43DE00C9D243 /* RMTilesUpdateDelegate.h */,
@@ -639,6 +656,8 @@
 				61324C40130F43DE00C9D243 /* RMCircle.h in Headers */,
 				61324C42130F43DE00C9D243 /* RMConfiguration.h in Headers */,
 				61324C44130F43DE00C9D243 /* RMWMS.h in Headers */,
+				612380C513A760EE00D9FFF9 /* NSUserDefaults+RouteMe.h in Headers */,
+				612380C813A7611C00D9FFF9 /* RouteMe.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,6 +775,7 @@
 				61324C41130F43DE00C9D243 /* RMCircle.m in Sources */,
 				61324C43130F43DE00C9D243 /* RMConfiguration.m in Sources */,
 				61324C45130F43DE00C9D243 /* RMWMS.m in Sources */,
+				612380C613A760EE00D9FFF9 /* NSUserDefaults+RouteMe.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

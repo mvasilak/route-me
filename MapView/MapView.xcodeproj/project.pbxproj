@@ -431,13 +431,13 @@
 			name = Configuration;
 			sourceTree = "<group>";
 		};
-		175701DB1323C2CF00A5D314 /* iOS Additions */ = {
+		175701DB1323C2CF00A5D314 /* Additions */ = {
 			isa = PBXGroup;
 			children = (
 				175701DC1323C2E900A5D314 /* NSUserDefaults+RouteMe.h */,
 				175701DD1323C2E900A5D314 /* NSUserDefaults+RouteMe.m */,
 			);
-			name = "iOS Additions";
+			name = Additions;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -735,7 +735,7 @@
 		B8C9740D0E8A196E007D16AD /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				175701DB1323C2CF00A5D314 /* iOS Additions */,
+				175701DB1323C2CF00A5D314 /* Additions */,
 				17F02BB01319BA4B00260C6B /* RouteMe.h */,
 				96492C3F0FA8AD3400EBA6D2 /* RMGlobalConstants.h */,
 				B1EB26C510B5D8E6009F8658 /* RMNotifications.h */,

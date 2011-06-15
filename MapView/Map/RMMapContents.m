@@ -226,7 +226,11 @@
 	
 	self.boundingMask = RMMapMinWidthBound;
 //	targetView = view;
+#if TARGET_OS_IPHONE
+    mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[_tileSource projection] ToScreenBounds:[view bounds]];
+#else
 	mercatorToScreenProjection = [[RMMercatorToScreenProjection alloc] initFromProjection:[_tileSource projection] ToScreenBounds:NSRectToCGRect([view bounds])];
+#endif    
 
 	tileSource = nil;
 	projection = nil;

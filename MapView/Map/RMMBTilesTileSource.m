@@ -41,6 +41,7 @@
 #pragma mark -
 
 @implementation RMMBTilesTileSource
+@synthesize isOriginSW;
 
 - (id)initWithTileSetURL:(NSURL *)tileSetURL
 {
@@ -56,6 +57,8 @@
     
     if ( ! [db open])
         return nil;
+    
+    isOriginSW = YES;
     
 	return self;
 }
@@ -88,7 +91,12 @@
 
     NSInteger zoom = tile.zoom;
     NSInteger x    = tile.x;
-    NSInteger y    = pow(2, zoom) - tile.y - 1;
+    NSInteger y;
+    if (isOriginSW) {
+        y = pow(2, zoom) - tile.y - 1;
+    } else {
+        y = tile.y;
+    }
 
     FMResultSet *results = [db executeQuery:@"select tile_data from tiles where zoom_level = ? and tile_column = ? and tile_row = ?", 
                                [NSNumber numberWithFloat:zoom], 
