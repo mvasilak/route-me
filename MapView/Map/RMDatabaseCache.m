@@ -46,7 +46,8 @@
 	
 	if ([paths count] > 0) // Should only be one...
 	{
-		NSString *cachePath = [paths objectAtIndex:0];
+		NSString *cachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:
+                               [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleIdentifierKey]];
 		
 		// check for existence of cache directory
 		if ( ![[NSFileManager defaultManager] fileExistsAtPath: cachePath]) 

@@ -164,7 +164,7 @@
 /// \bug magic numbers and strings
 - (id<RMTileCache>) newDatabaseCacheWithConfig: (NSDictionary*) cfg tileSource: (id<RMTileSource>) theTileSource
 {
-	BOOL useCacheDir = NO;
+	BOOL useCacheDir = YES;
 	RMCachePurgeStrategy strategy = RMCachePurgeStrategyFIFO;
 	/// \bug magic numbers
 	NSUInteger capacity = 1000;
